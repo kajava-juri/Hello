@@ -3,6 +3,7 @@ import BlogPosts from "./src/views/BlogPosts";
 import BlogDetails from "./src/views/BlogDetails";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import BlogCreate from "./src/views/BlogCreate";
 
 const Stack = createNativeStackNavigator();
 
@@ -25,6 +26,15 @@ export default function App() {
           },
           headerShadowVisible: false,
         }} />
+        <Stack.Screen name="Create" component={BlogCreate}
+          options={{
+            title: "Creating post",
+            headerTitleAlign: "center",
+            headerStyle: {
+              backgroundColor: "#282C34",
+            },
+            headerShadowVisible: false,
+          }}/>
       </Stack.Navigator>
     </NavigationContainer>
 

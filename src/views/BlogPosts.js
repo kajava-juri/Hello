@@ -1,26 +1,28 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, ScrollView} from "react-native";
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity} from "react-native";
 import BlogPost from "../components/BlogPost";
 
 export default function BlogPosts({navigation}) {
-  let [modalVisible, setModalVisible] = useState(false);
 
   return (
 
     <View style={styles.root}>
         <View style={styles.main}>
-        <View style={styles.header}>
-            <Text style={styles.blogName}>Some blog</Text>
-            <Text style={styles.blogCreate}>Create new</Text>
-        </View>
+          <View style={styles.header}>
+              <Text style={styles.blogName}>Some blog</Text>
+              <TouchableOpacity onPress={() => navigation.navigate('Create')}>
+                <Text style={styles.blogCreate} >Create new</Text>
+              </TouchableOpacity>
 
-        <ScrollView style={styles.scrollview}>
-            <BlogPost title="Blog Title" description="desc" navigation={navigation}></BlogPost>
-            <BlogPost title="Blog Title" description="desc"></BlogPost>
-            <BlogPost title="Blog Title" description="desc"></BlogPost>
-            <BlogPost title="Blog Title" description="desc"></BlogPost>
-            <BlogPost title="Blog Title" description="desc"></BlogPost>
-        </ScrollView>
+          </View>
+
+          <ScrollView style={styles.scrollview}>
+              <BlogPost title="Blog Title" description="desc" navigation={navigation} imageUrl="https://github.com/mxrguspxrt/mobile/raw/main/cat1.jpeg"></BlogPost>
+              <BlogPost title="Blog Title" description="desc" navigation={navigation} imageUrl="https://github.com/mxrguspxrt/mobile/raw/main/cat1.jpeg"></BlogPost>
+              <BlogPost title="Blog Title" description="desc" navigation={navigation} imageUrl="https://github.com/mxrguspxrt/mobile/raw/main/cat1.jpeg"></BlogPost>
+              <BlogPost title="Blog Title" description="desc" navigation={navigation} imageUrl="https://github.com/mxrguspxrt/mobile/raw/main/cat1.jpeg"></BlogPost>
+              <BlogPost title="Blog Title" description="desc" navigation={navigation} imageUrl="https://github.com/mxrguspxrt/mobile/raw/main/cat1.jpeg"></BlogPost>
+          </ScrollView>
 
         </View>
     </View>
@@ -38,7 +40,7 @@ const styles = StyleSheet.create({
   },
   main: {
     paddingLeft: 16,
-    paddingRight: 32,
+    paddingRight: 16,
     paddingTop: 32,
   },
   blogName:{
@@ -59,5 +61,6 @@ const styles = StyleSheet.create({
   },
   scrollview:{
     marginBottom: 64,
+
   }
 });
