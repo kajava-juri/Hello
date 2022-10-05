@@ -1,8 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity} from "react-native";
 import BlogPost from "../components/BlogPost";
 
 export default function BlogPosts({navigation}) {
+  const [isLoading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
+
+  const getPosts = async () => {
+     try {
+      const response = await fetch('http://192.168.56.1:3000/api/posts');
+      const json = await response.json();
+      setData(json);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    getPosts();
+  }, []);
+
 
   return (
 
@@ -17,11 +36,13 @@ export default function BlogPosts({navigation}) {
           </View>
 
           <ScrollView style={styles.scrollview}>
-              <BlogPost title="Blog Title" description="desc" navigation={navigation} imageUrl="https://github.com/mxrguspxrt/mobile/raw/main/cat1.jpeg"></BlogPost>
-              <BlogPost title="Blog Title" description="desc" navigation={navigation} imageUrl="https://github.com/mxrguspxrt/mobile/raw/main/cat1.jpeg"></BlogPost>
-              <BlogPost title="Blog Title" description="desc" navigation={navigation} imageUrl="https://github.com/mxrguspxrt/mobile/raw/main/cat1.jpeg"></BlogPost>
-              <BlogPost title="Blog Title" description="desc" navigation={navigation} imageUrl="https://github.com/mxrguspxrt/mobile/raw/main/cat1.jpeg"></BlogPost>
-              <BlogPost title="Blog Title" description="desc" navigation={navigation} imageUrl="https://github.com/mxrguspxrt/mobile/raw/main/cat1.jpeg"></BlogPost>
+
+            {data.map((post) => {
+              return(
+                <BlogPost title={post.title} description={post.description} navigation={navigation} imageUrl={post.image} id={post.id}></BlogPost>
+              )
+            })}
+
           </ScrollView>
 
         </View>
