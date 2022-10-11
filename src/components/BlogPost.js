@@ -7,8 +7,7 @@ export default function BlogPost({title, description, imageUrl, id, navigation})
     return (
         <TouchableOpacity onPress={() => navigation.navigate('Details', {id: id})}>
             <View style={styles.blog}>
-
-                <Text style={styles.blogTitle}>{title}</Text>
+                <Text style={styles.blogTitle} numberOfLines={2}>{title}</Text>
                 <Image style={styles.image} source={{uri: imageUrl}} resizeMode="cover"></Image>
                 <Text style={styles.desc}>{description}</Text>
             </View>
@@ -34,7 +33,9 @@ const styles = StyleSheet.create({
     blogTitle: {
         fontSize: 32,
         marginBottom: 8,
-        color: "white"
+        color: "white",
+        flex: 1,
+
     },
     desc: {
         marginTop: 8,

@@ -6,22 +6,38 @@ export default function BlogPosts({navigation}) {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
 
-  const getPosts = async () => {
-     try {
-      const response = await fetch('http://192.168.56.1:3000/api/posts');
-      const json = await response.json();
-      setData(json);
-    } catch (error) {
-      console.error(error);
-    } finally {
+  // const getPosts = async () => {
+  //    try {
+  //     const response = await fetch('http://192.168.1.197:3000/api/posts');
+  //     const json = await response.json();
+  //     setData(json);
+  //   } catch (error) {
+  //     console.error(error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }
+
+  function getPosts(){
+    fetch("https://jsonplaceholder.typicode.com/posts")
+      .then(response => response.json())
+      .then(posts => {
+        posts.map((post) => {
+          post.image = "https://github.com/mxrguspxrt/mobile/raw/main/cat1.jpeg";
+          post.description = "desc";
+      });
+
+      setData(posts);
+    })
+    .finally(() => {
       setLoading(false);
-    }
+    })
   }
 
   useEffect(() => {
     getPosts();
   }, []);
-
+  
 
   return (
 
@@ -37,9 +53,9 @@ export default function BlogPosts({navigation}) {
 
           <ScrollView style={styles.scrollview}>
 
-            {data.map((post) => {
+            {data.map((post, i) => {
               return(
-                <BlogPost title={post.title} description={post.description} navigation={navigation} imageUrl={post.image} id={post.id}></BlogPost>
+                <BlogPost key={i} title={post.title} description={post.description} navigation={navigation} imageUrl={post.image} id={post.id}></BlogPost>
               )
             })}
 
@@ -66,7 +82,7 @@ const styles = StyleSheet.create({
   },
   blogName:{
     fontSize: 32,
-    marginBottom: 32,
+    marginBottom: 16,
     marginRight: 20,
     flex: 1,
     color: "white"

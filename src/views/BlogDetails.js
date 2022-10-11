@@ -5,10 +5,11 @@ export default function BlogDetails({navigation, route}){
 
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState();
+    let [comments, setComments] = useState([]);
   
     const getPost = async () => {
        try {
-        const url=`http://192.168.56.1:3000/api/posts/${route.params.id}`;
+        const url=`https://jsonplaceholder.typicode.com/posts/${route.params.id}`;
         const response = await fetch(url);
         const json = await response.json(response);
         setData(json);
@@ -18,6 +19,23 @@ export default function BlogDetails({navigation, route}){
         setLoading(false);
       }
     }
+
+
+
+    const getComments = async () => {
+        try{
+            const response = await fetch(`https://jsonplaceholder.typicode.com/comments?postId=${route.params.id}`);
+            const json = await response.json(response);
+            setComments(json);
+        } catch(error) {
+            console.error(error);
+        } 
+    
+    }
+
+    useEffect(() => {
+        getComments();
+      }, []);
   
     useEffect(() => {
       getPost();
@@ -25,15 +43,31 @@ export default function BlogDetails({navigation, route}){
 
     return(
         <View style={styles.root}>
+            <ScrollView>
+                <ScrollView style={{minHeight: 600}}>
+                {data && (
+                    <View>
+                        <Text style={styles.blogTitle}>{data.title}</Text>
+                        <Text style={styles.blogBody}>{data.body}</Text>
+                        <Image style={styles.image} source={{uri: data.image}} resizeMode="cover"></Image>
 
-            {data && (
-                <View>
-                    <Text style={styles.blogTitle}>{data.title}</Text>
-                    <Text style={styles.blogBody}>{data.body}</Text>
-                    <Image style={styles.image} source={{uri: data.image}} resizeMode="cover"></Image>
+                    </View>
+                )}
+                </ScrollView>
 
-                </View>
-            )}
+                <ScrollView>
+                    <Text style={{fontSize: 24, alignSelf: "center", marginBottom: 16}}>Comments</Text>
+                    {comments.map((comment, i) => {
+                        return(
+                        <View key={i} style={styles.comment}>
+                            <Text style={styles.commentName}>{comment.name}</Text>
+                            <Text>{comment.body}</Text>
+                        </View>
+                        )
+                    })}
+                </ScrollView>
+            </ScrollView>
+            
 
         </View>
     );
@@ -47,7 +81,7 @@ const styles = StyleSheet.create({
         padding: 16,
     },
     blogTitle: {
-        fontSize: 32,
+        fontSize: 24,
         marginBottom: 32,
         color: "white",
         alignSelf: "center"
@@ -64,5 +98,14 @@ const styles = StyleSheet.create({
     },
     scrollview: {
         height: "100%",
+    },
+    comment: {
+        display: "flex",
+        flexDirection: "column",
+        marginTop: 8,
+        marginBottom: 8
+    },
+    commentName: {
+        fontWeight: "bold",
     }
 })
