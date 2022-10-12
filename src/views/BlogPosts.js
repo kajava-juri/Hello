@@ -6,36 +6,44 @@ export default function BlogPosts({navigation}) {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
 
-  // const getPosts = async () => {
-  //    try {
-  //     const response = await fetch('http://192.168.1.197:3000/api/posts');
-  //     const json = await response.json();
-  //     setData(json);
-  //   } catch (error) {
-  //     console.error(error);
-  //   } finally {
+
+  // function getPosts(){
+  //   fetch("https://jsonplaceholder.typicode.com/posts")
+  //     .then(response => response.json())
+  //     .then(posts => {
+  //       posts.map((post) => {
+  //         post.image = "https://github.com/mxrguspxrt/mobile/raw/main/cat1.jpeg";
+  //         post.description = "desc";
+  //     });
+  //     console.log(posts);
+      
+  //     setData(posts);
+  //   })
+  //   .finally(() => {
   //     setLoading(false);
-  //   }
+  //   })
   // }
 
-  function getPosts(){
-    fetch("https://jsonplaceholder.typicode.com/posts")
-      .then(response => response.json())
-      .then(posts => {
-        posts.map((post) => {
-          post.image = "https://github.com/mxrguspxrt/mobile/raw/main/cat1.jpeg";
-          post.description = "desc";
+  const getPosts = async () => {
+    try {
+     const url=`https://jsonplaceholder.typicode.com/posts`;
+     const response = await fetch(url);
+     const posts = await response.json(response);
+     posts.map((post) => {
+        post.image = "https://github.com/mxrguspxrt/mobile/raw/main/cat1.jpeg";
+        post.description = "desc";
       });
-
-      setData(posts);
-    })
-    .finally(() => {
-      setLoading(false);
-    })
-  }
+     setData(posts);
+   } catch (error) {
+     console.error(error);
+   } finally {
+     setLoading(false);
+   }
+ }
 
   useEffect(() => {
     getPosts();
+    
   }, []);
   
 
