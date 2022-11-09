@@ -26,13 +26,9 @@ export default function BlogPosts({navigation}) {
 
   const getPosts = async () => {
     try {
-     const url=`https://jsonplaceholder.typicode.com/posts`;
+     const url=`http://192.168.56.1:3000/api/posts`;
      const response = await fetch(url);
      const posts = await response.json(response);
-     posts.map((post) => {
-        post.image = "https://github.com/mxrguspxrt/mobile/raw/main/cat1.jpeg";
-        post.description = "desc";
-      });
      setData(posts);
    } catch (error) {
      console.error(error);
@@ -42,7 +38,10 @@ export default function BlogPosts({navigation}) {
  }
 
   useEffect(() => {
-    getPosts();
+    const postCreated = navigation.addListener('focus', async () => {
+      getPosts();
+    })
+    return postCreated;
     
   }, []);
   

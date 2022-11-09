@@ -2,36 +2,23 @@ import { StyleSheet, Text, TextInput, View, ScrollView, TouchableOpacity} from "
 import React, { useState } from "react";
 
 export default function BlogCreate(){
-    let [title, setTitle] = useState("");
-    let [body, setBody] = useState("");
-    let [newPost, setNewPost] = useState({});
+    const [title, setTitle] = useState("");
+    const [body, setBody] = useState("");
+    const [newPost, setNewPost] = useState({});
+    const [imageURL, setImageURL] = useState("");
+    const [desc, setDesc] = useState("");
 
     function handleSubmit(){
-        fetch("localhost:3000/api/posts", {
+        fetch("http://192.168.56.1:3000/api/posts", {
             headers: {
                 "Content-Type": "application/json",
             },
             method: "POST",
-            body: JSON.stringify({title: title, body: body}),
+            body: JSON.stringify({title: title, body: body, image: imageURL, desctiption: desc}),
         }).then(response => response.json())
         .then(data => {
             console.warn(data);
         })
-    }
-
-    function handleFetch(){
-        fetch("192.168.56.1:3000/api/posts", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            }
-        }).then(response => response.json())
-        .then(data => {
-            console.log(data);
-        })
-        .catch((error) => {  
-            console.error(error);  
-          });
     }
 
     return(
@@ -50,20 +37,26 @@ export default function BlogCreate(){
             onChangeText={(text) => setBody(text)}
             value={body}></TextInput>
 
+            <Text>Image URL</Text>
+            <TextInput
+            style={styles.input}
+            onChangeText={url => setImageURL(url)}
+            value={imageURL}
+            />
+
+            <Text>Description</Text>
+            <TextInput
+            maxLength={32}
+            style={styles.input}
+            onChangeText={d => setDesc(d)}
+            value={desc}
+            />
+
             <TouchableOpacity
                style = {styles.submitButton}
                onPress = {handleSubmit}>
                <Text> Submit </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-               style = {styles.submitButton}
-               onPress = {handleFetch}>
-               <Text> Fetch </Text>
-            </TouchableOpacity>
-
-            
-            
+            </TouchableOpacity>     
         </View>
     )
 }
@@ -76,7 +69,7 @@ const styles = StyleSheet.create({
         padding: 16,
     },
     submitButton: {
-        backgroundColor: '#7a42f4',
+        backgroundColor: '#ED7923',
         padding: 10,
         margin: 15,
         height: 40,
@@ -84,7 +77,7 @@ const styles = StyleSheet.create({
     input: {
         margin: 15,
         padding: 8,
-        borderColor: '#7a42f4',
+        borderColor: '#ED7923',
         borderWidth: 1
     },
 })

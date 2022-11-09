@@ -1,15 +1,16 @@
-import {StyleSheet, View, Text, Image, ScrollView} from "react-native";
+import {StyleSheet, View, Text, Image, ScrollView, TextInput, Button} from "react-native";
 import {useState, useEffect} from "react";
 
 export default function BlogDetails({navigation, route}){
 
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState();
-    let [comments, setComments] = useState([]);
+    const [comments, setComments] = useState([]);
+    const [newComment, setNewComment] = useState("");
   
     const getPost = async () => {
        try {
-        const url=`https://jsonplaceholder.typicode.com/posts/${route.params.id}`;
+        const url=`http://192.168.56.1:3000/api/posts/${route.params.id}`;
         const response = await fetch(url);
         const json = await response.json(response);
         setData(json);
@@ -24,7 +25,7 @@ export default function BlogDetails({navigation, route}){
 
     const getComments = async () => {
         try{
-            const response = await fetch(`https://jsonplaceholder.typicode.com/comments?postId=${route.params.id}`);
+            const response = await fetch(`http://192.168.56.1:3000/api/comments?postId=${route.params.id}`);
             const json = await response.json(response);
             setComments(json);
         } catch(error) {
@@ -33,13 +34,26 @@ export default function BlogDetails({navigation, route}){
     
     }
 
+    const postComment = async () => {
+        try{
+            const response = await fetch(`http://192.168.56.1:3000/api/comments`, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                method: "POST",
+                body: JSON.stringify({comment: newComment, postId: route.params.id})
+            }).then(response => response.json());
+            getComments();
+            setNewComment("");
+        } catch(error){
+            console.error(error);
+        }
+    }
+
     useEffect(() => {
         getComments();
+        getPost();
       }, []);
-  
-    useEffect(() => {
-      getPost();
-    }, []);
 
     return(
         <View style={styles.root}>
@@ -57,11 +71,23 @@ export default function BlogDetails({navigation, route}){
 
                 <ScrollView>
                     <Text style={{fontSize: 24, alignSelf: "center", marginBottom: 16}}>Comments</Text>
-                    {comments.map((comment, i) => {
+                    <View style={styles}>
+                        <Text>Enter your comment</Text>
+                        <TextInput style={{marginBottom: 8, marginTop: 8, backgroundColor: "#505868"}}
+                            maxLength={255}
+                            onChangeText={(comment) => setNewComment(comment)}
+                            value={newComment}
+                        ></TextInput>
+                        <Button 
+                        title="Submit"
+                        onPress={postComment}/>
+                    </View>
+                    {comments.map((comment) => {
                         return(
-                        <View key={i} style={styles.comment}>
-                            <Text style={styles.commentName}>{comment.name}</Text>
-                            <Text>{comment.body}</Text>
+                        <View key={comment.id} style={styles.comment}>
+                            {/* <Text style={styles.commentName}>{comment.name}</Text> */}
+                            <Text style={styles.commentName}>Username</Text>
+                            <Text>{comment.comment}</Text>
                         </View>
                         )
                     })}
@@ -91,8 +117,8 @@ const styles = StyleSheet.create({
         textAlign: "justify"
     },
     image: {
-        width: "80%",
-        height: "40%",
+        width: 290,
+        height: 220,
         alignSelf: "center",
         marginTop: 16,
     },
@@ -107,5 +133,9 @@ const styles = StyleSheet.create({
     },
     commentName: {
         fontWeight: "bold",
+    },
+    commentInputContainer: {
+        display: "flex",
+        flexDirection: "row",
     }
 })
